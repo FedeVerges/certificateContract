@@ -1,0 +1,20 @@
+{
+  "name": "certificatecontract",
+  "version": "1.0.0",
+  "description": "contrato inteligente para el manejo de certificados estudiantiles",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "compile": "truffle compile",
+    "deploy": "truffle migrate",
+    "deploy-sepolia": "truffle migrate --network sepolia",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.13"
+  }
+}
