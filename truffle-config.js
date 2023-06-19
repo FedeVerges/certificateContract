@@ -88,7 +88,7 @@ module.exports = {
         return new HDWalletProvider(mnemonic, 'https://sepolia.infura.io/v3/04be9cd572fa4376a643b4b78aaa7498')
       },
       network_id: '11155111',
-      gas:  5000000,
+      gas: 5000000,
       gasPrice: 10000000000,
       confirmations: 2,    // # of confirmations to wait between deployments. (default: 0)
       timeoutBlocks: 200,  // # of blocks before a deployment times out  (minimum/default: 50)
@@ -142,4 +142,22 @@ module.exports = {
   //     }
   //   }
   // }
+
+
+
+  /* 
+   Deploying 'Certificates'
+   ------------------------
+   > transaction hash:    0x8a87cc8649a79caca24275302232cc703e94678b1ece259b5ff2392f8c9b7776
+   > Blocks: 0            Seconds: 5
+   > contract address:    0x9c9d59693aDc74389227CA4b73a6C2084B7B1b80
+   > block number:        3612704
+   > block timestamp:     1685759256
+   > account:             0x04b3FA27AbBA4Ab66f17E7Bf1e4BA54EDD882069
+   > balance:             0.41864401036534131
+   > gas used:            2696397 (0x2924cd)
+   > gas price:           10 gwei
+   > value sent:          0 ETH
+   > total cost:          0.02696397 ETH
+ */
 };
