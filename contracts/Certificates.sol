@@ -38,7 +38,7 @@ contract Certificates {
         bool active; // Activo
     }
 
-    event CertificateCreated(uint256 id, uint256 createdAt, uint256 updatedAt);
+    event CertificateCreated(uint256 id, uint256 date, uint chainId, address origin);
 
     // Titulos (idTitulo => titulo).
     mapping(uint256 => Certificate) private certificates;
@@ -131,7 +131,8 @@ contract Certificates {
         emit CertificateCreated(
             newCertificateId,
             block.timestamp,
-            block.timestamp
+            block.chainid,
+            tx.origin
         );
     }
 
@@ -145,7 +146,8 @@ contract Certificates {
         emit CertificateCreated(
             certificateId ,
             block.timestamp,
-            block.timestamp
+            block.chainid,
+            tx.origin
         );
     }
 }
