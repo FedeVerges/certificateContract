@@ -43,6 +43,9 @@ contract Certificates {
     // Titulos (idTitulo => titulo).
     mapping(uint256 => Certificate) private certificates;
 
+    // Obleas (codigo_oblea => idTitulo).
+    mapping(string => uint256) private wafers;
+
     // Estudiantes con titulos. (idEstudiante => idTitulo).
     mapping(uint256 => uint256[]) private student_has_certificates;
 
@@ -83,6 +86,13 @@ contract Certificates {
         // Creo el nuevo Id del titulo.
         uint256 newCertificateId = amountCertificates;
 
+        // Controlo que no exista el codigo de la oblea en el sistema.
+        require(wafers[_certificate.waferNumber] == 0, "El numero de oblea ya existe.");
+
+        //TODO: Buscar los titulos del estudiante y validar.
+        // recorrer todos los titulos y controlar que no tengan los mismos datos. 
+        // require()
+
         // Creo el titulo con el nuevo id y lo guardo en el mapa.
         certificates[newCertificateId] = Certificate(
             newCertificateId,
@@ -93,6 +103,9 @@ contract Certificates {
             block.timestamp,
             true
         );
+
+        // Relaciono la oblea con el titulo.
+        wafers[_certificate.waferNumber] = newCertificateId;
 
         // Creo la relacion entre titulo y el estudiante.
 
