@@ -14,6 +14,7 @@ contract Certificates {
         string name;
         string lastname;
         string docNumber;
+        string docType;
         string sex;
         uint256 registrationNumber;
     }
@@ -22,23 +23,26 @@ contract Certificates {
         string academicUnit; // Facultad
         string degreeProgramName; // Nombre de la carrera
         string degreeProgramCurriculum; // Plan de estudios
-        string degreeType;
-        string superiorCouncilOrdinance;
-        string directiveCouncilOrdinance;
-        string ministerialOrdinance;
+        string degreeType; // Tipo de carrara
     }
 
     struct Certificate {
         uint256 id;
         Student student;
         UniversityDegree universityDegree;
-        string waferNumber; // Resolucion ministerial.
+        string waferNumber; // Numero de oblea.
         uint256 createdAt;
         uint256 updatedAt;
         bool active; // Activo
     }
 
-    event CertificateCreated(uint256 id, uint256 date, uint chainId, address origin);
+    event CertificateCreated(
+        uint256 id,
+        uint256 date,
+        string docNumber,
+        uint chainId,
+        address origin
+    );
 
     // Titulos (idTitulo => titulo).
     mapping(uint256 => Certificate) private certificates;
@@ -49,19 +53,15 @@ contract Certificates {
     // Estudiantes con titulos. (idEstudiante => idTitulo).
     mapping(uint256 => uint256[]) private student_has_certificates;
 
-    function getCertificatesById(uint256 id)
-        public
-        view
-        returns (Certificate memory certificate)
-    {
+    function getCertificatesById(
+        uint256 id
+    ) public view returns (Certificate memory certificate) {
         return certificates[id];
     }
 
-    function getCertificatesByStudentId(uint256 studentId)
-        public
-        view
-        returns (Certificate[] memory)
-    {
+    function getCertificatesByStudentId(
+        uint256 studentId
+    ) public view returns (Certificate[] memory) {
         uint256[] memory studentCertificatesids = student_has_certificates[
             studentId
         ];
@@ -87,11 +87,37 @@ contract Certificates {
         uint256 newCertificateId = amountCertificates;
 
         // Controlo que no exista el codigo de la oblea en el sistema.
-        require(wafers[_certificate.waferNumber] == 0, "El numero de oblea ya existe.");
+        require(
+            wafers[_certificate.waferNumber] == 0,
+            "El numero de oblea ya existe."
+        );
 
-        //TODO: Buscar los titulos del estudiante y validar.
-        // recorrer todos los titulos y controlar que no tengan los mismos datos. 
-        // require()
+        // Obtengo los ids de los titulos del estudiante.
+        uint256[] memory studentCertificatesids = student_has_certificates[
+            _certificate.student.id
+        ];
+
+        // Verifica si el estudiante ya tiene un certificado asociado a la misma carrera.
+        if (studentCertificatesids.length > 0) {
+            for (uint i = 0; i < studentCertificatesids.length; i++) {
+                uint256 certificateId = studentCertificatesids[i];
+                require(
+                    keccak256(
+                        bytes(
+                            certificates[certificateId]
+                                .universityDegree
+                                .degreeProgramName
+                        )
+                    ) !=
+                        keccak256(
+                            bytes(
+                                _certificate.universityDegree.degreeProgramName
+                            )
+                        ),
+                    "Ya existe un certificado con el mismo nombre para este estudiante"
+                );
+            }
+        }
 
         // Creo el titulo con el nuevo id y lo guardo en el mapa.
         certificates[newCertificateId] = Certificate(
@@ -108,11 +134,6 @@ contract Certificates {
         wafers[_certificate.waferNumber] = newCertificateId;
 
         // Creo la relacion entre titulo y el estudiante.
-
-        // Obtengo los ids de los titulos del estudiante.
-        uint256[] memory studentCertificatesids = student_has_certificates[
-            _certificate.student.id
-        ];
 
         // Si el estudiante es nuevo. No tiene titulos asociados.
         if (studentCertificatesids.length == 0) {
@@ -144,6 +165,7 @@ contract Certificates {
         emit CertificateCreated(
             newCertificateId,
             block.timestamp,
+            _certificate.student.docNumber,
             block.chainid,
             tx.origin
         );
@@ -156,9 +178,14 @@ contract Certificates {
         certificate.active = false;
         certificate.updatedAt = block.timestamp;
         certificates[certificateId] = certificate;
+
+        // Elimino la oblea.
+        wafers[certificate.waferNumber] = 0;
+
         emit CertificateCreated(
-            certificateId ,
+            certificate.id,
             block.timestamp,
+            certificate.student.docNumber,
             block.chainid,
             tx.origin
         );
