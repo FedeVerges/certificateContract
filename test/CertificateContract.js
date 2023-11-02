@@ -22,12 +22,38 @@ contract("Certificate", () => {
     it("Prueba de idempotencia: No se pueden crear dos titulos iguales (prueba numero de oblea.)", async () => {
 
         // Datos del certificado que deseas crear
+
+        const certificate1 = {
+            student: {
+                docNumber: "41221778",
+                docType: "DNI",
+                name: "Federico",
+                lastname: "Verges",
+                sex: "Masculino",
+                registrationNumber: 3028516,
+                id: 412217783028516,
+            },
+            active: true,
+            universityDegree: {
+                academicUnit: "Facultad de Ciencias Físico Matemáticas y Naturales",
+                degreeProgramName: "Ingeniería en Electrónica",
+                degreeProgramCurriculum: "16-10",
+                degreeType: "POSGRADO",
+                universityName: "Universidad Nacional de San Luis",
+            },
+            createdAt: 0,
+            id: 0,
+            updatedAt: 0,
+            waferNumber: "123123213",
+        };
+
         const certificate = {
             id: 0,
             student: {
                 id: 123453000000,
                 name: "Nombre",
                 lastname: "Apellido",
+                docType: 'DNI',
                 docNumber: "3000000",
                 sex: "M",
                 registrationNumber: 1235,
@@ -38,9 +64,6 @@ contract("Certificate", () => {
                 degreeProgramName: "Ingeniería en Informatica",
                 degreeProgramCurriculum: "12-34",
                 degreeType: "Postgrado",
-                superiorCouncilOrdinance: "Resolucion 1",
-                directiveCouncilOrdinance: "Resolucion 2",
-                ministerialOrdinance: "Resolucion 3",
             },
             waferNumber: "1234ABCDEF",
             createdAt: 0,
@@ -50,7 +73,7 @@ contract("Certificate", () => {
 
 
         // Llama a la función para crear el certificado.
-        await this.certificateContract.createCertificate(certificate);
+        await this.certificateContract.createCertificate(certificate1);
 
         // Verifica que el evento "CertificateCreated" haya sido emitido.
         const events = await this.certificateContract.getPastEvents("CertificateCreated");
@@ -58,7 +81,7 @@ contract("Certificate", () => {
         console.log(events)
 
         // Verifica que el certificado fue creado correctamente.
-        const certificates = await this.certificateContract.getCertificatesByStudentId(certificate.student.id);
+        const certificates = await this.certificateContract.getCertificatesByStudentId(certificate1.student.id);
 
         // console.log(JSON.stringify(certificate));
 
@@ -77,6 +100,7 @@ contract("Certificate", () => {
 
     it("Prueba de idempotencia con estudiante: Un estudiante no puede tener multiples titulos con el mismo nombre", async () => {
 
+
         // Datos del certificado que deseas crear
         const certificate = {
             id: 0,
@@ -84,6 +108,7 @@ contract("Certificate", () => {
                 id: 123453000000,
                 name: "Nombre",
                 lastname: "Apellido",
+                docType: 'DNI',
                 docNumber: "3000000",
                 sex: "M",
                 registrationNumber: 1235,
@@ -92,24 +117,22 @@ contract("Certificate", () => {
                 universityName: "Universidad",
                 academicUnit: "Facultad",
                 degreeProgramName: "Ingeniería en Alimentos",
-                degreeProgramCurriculum: "12-34",
-                degreeType: "Postgrado",
-                superiorCouncilOrdinance: "Resolucion 1",
-                directiveCouncilOrdinance: "Resolucion 2",
-                ministerialOrdinance: "Resolucion 3",
+                degreeProgramCurriculum: "12-10",
+                degreeType: "Grado",
             },
-            waferNumber: "1234ABCDEH",
+            waferNumber: "1234ABCDEG",
             createdAt: 0,
             updatedAt: 0,
             active: true
         };
-        // Datos del certificado que deseas crear
+
         const certificate2 = {
             id: 0,
             student: {
                 id: 123453000000,
                 name: "Nombre",
                 lastname: "Apellido",
+                docType: 'DNI',
                 docNumber: "3000000",
                 sex: "M",
                 registrationNumber: 1235,
@@ -118,13 +141,10 @@ contract("Certificate", () => {
                 universityName: "Universidad",
                 academicUnit: "Facultad",
                 degreeProgramName: "Ingeniería en Alimentos",
-                degreeProgramCurriculum: "12-34",
-                degreeType: "Postgrado",
-                superiorCouncilOrdinance: "Resolucion 1",
-                directiveCouncilOrdinance: "Resolucion 2",
-                ministerialOrdinance: "Resolucion 3",
+                degreeProgramCurriculum: "12-10",
+                degreeType: "Grado",
             },
-            waferNumber: "1234ABCDEG",
+            waferNumber: "1234ABCDSFG", // Distinta oblea.
             createdAt: 0,
             updatedAt: 0,
             active: true

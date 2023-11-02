@@ -71,7 +71,7 @@ module.exports = {
     //   skipDryRun: true,    // Skip dry run before migrations? (default: false for public nets )
     // },
 
-    //truffle migrate —network goerli.
+    //truffle migrate --network goerli.
     goerli: {
       provider: () => {
         return new HDWalletProvider(mnemonic, 'https://goerli.infura.io/v3/04be9cd572fa4376a643b4b78aaa7498')
@@ -83,6 +83,7 @@ module.exports = {
       skipDryRun: true,    // Skip dry run before migrations? (default: false for public nets )
       gasPrice: 10000000000,
     },
+    // truffle migrate --network sepolia
     sepolia: {
       provider: () => {
         return new HDWalletProvider(mnemonic, 'https://sepolia.infura.io/v3/04be9cd572fa4376a643b4b78aaa7498')
