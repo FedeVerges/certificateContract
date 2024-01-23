@@ -9,6 +9,7 @@ contract Certificates {
         amountCertificates = 0;
     }
 
+    // Estudiante.
     struct Student {
         uint256 id;
         string name;
@@ -18,6 +19,7 @@ contract Certificates {
         string sex;
         uint256 registrationNumber;
     }
+    // Carrera.
     struct UniversityDegree {
         string universityName;
         string academicUnit; // Facultad
@@ -26,6 +28,7 @@ contract Certificates {
         string degreeType; // Tipo de carrara
     }
 
+    // Titulo.
     struct Certificate {
         uint256 id;
         Student student;
